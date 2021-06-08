@@ -86,7 +86,7 @@ router.get('/search/:value', auth, async (req, res) => {
       $or: [{ name: { $regex: search, $options: 'i' } }],
     }
 
-    const groups = await Group.find(obj)
+    const groups = await Group.find(obj).sort({ _id: -1 })
 
     res.status(200).json(
       await Promise.all(

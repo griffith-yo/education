@@ -5,6 +5,7 @@ import { X, Edit } from 'react-feather'
 import ModalComponent from './Modal'
 import CollapseButton from './CollapseButton'
 import CollapseBody from './CollapseBody'
+import Dropdown from './Dropdown'
 
 const GroupsList = ({ deleteHandler, getPaginatedData }) => {
   const iconSize = 26
@@ -41,15 +42,12 @@ const GroupsList = ({ deleteHandler, getPaginatedData }) => {
                     (res) => res.programId === value.value
                   )
                   console.log(value.value, result)
+                  {
+                    /* {value.labelEdudirection} */
+                  }
                   return (
                     <div key={value.value}>
-                      {/* {value.labelEdudirection} */}
-                      <Link
-                        className="text-decoration-none"
-                        to={`/program/${value.value}`}
-                      >
-                        {value.label}
-                      </Link>
+                      <Dropdown text={value.label} items={result} />
                     </div>
                   )
                 })}

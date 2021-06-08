@@ -11,9 +11,10 @@ import { AuthContext } from '../context/AuthContext'
 import { Loader } from '../components/Loader'
 import { useMessage } from '../hooks/message.hook'
 import { Save } from 'react-feather'
-import Pdf from 'react-to-pdf'
+// import Pdf from 'react-to-pdf'
+import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer'
 import DetailingList from '../components/DetailingList'
-import Page from '../components/Page'
+// import Page from '../components/Page'
 
 export const DetailingPage = () => {
   const userID = useParams().userID
@@ -105,7 +106,7 @@ export const DetailingPage = () => {
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <span>
           <h1 className="h2">
-            <Pdf
+            {/* <Pdf
               targetRef={PDF}
               filename={`${detailing.user}.pdf`}
               options={PDFoptions}
@@ -121,12 +122,12 @@ export const DetailingPage = () => {
                   <Save />
                 </button>
               )}
-            </Pdf>
+            </Pdf> */}
             &nbsp; Детализация
           </h1>
         </span>
       </div>
-      <Page>
+      {/* <Page>
         <div className="p-5" ref={PDF}>
           <div className="mb-4">
             <h4>{detailing.user}</h4>
@@ -140,7 +141,7 @@ export const DetailingPage = () => {
           </div>
           <DetailingList detailing={detailing} />
         </div>
-      </Page>
+      </Page> */}
     </main>
   )
 }

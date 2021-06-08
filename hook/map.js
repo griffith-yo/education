@@ -34,7 +34,7 @@ const mapSelectedUsersWithResult = async (users, programs, group) => {
         programs.map(async (program) => {
           const resultToFind = await Result.findOne(
             { user, program, group },
-            'passed'
+            'passed attempt'
           ).sort({
             _id: -1,
           })
@@ -47,6 +47,7 @@ const mapSelectedUsersWithResult = async (users, programs, group) => {
             programId: programToFind._id,
             program: programToFind.name,
             passed: resultToFind.passed,
+            attempt: resultToFind.attempt,
           })
         })
       )

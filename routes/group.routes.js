@@ -95,6 +95,11 @@ router.get('/search/:value', auth, async (req, res) => {
             return {
               _id: group._id,
               name: group.name,
+              result: await mapSelectedUsersWithResult(
+                group.users,
+                group.programs,
+                group._id
+              ),
               dateStart: group.dateStart.toLocaleDateString(),
               dateEnd: group.dateEnd.toLocaleDateString(),
               selectedUsers: await mapSelectedUsers(group.users),

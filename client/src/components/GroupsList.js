@@ -38,16 +38,18 @@ const GroupsList = ({ deleteHandler, getPaginatedData }) => {
               <td className="align-middle w-10">{group.name}</td>
               <td className="align-middle w-25">
                 {group.selectedPrograms.map((value, index) => {
-                  const result = group.result.filter(
-                    (res) => res.programId === value.value
-                  )
-                  console.log(value.value, result)
-                  {
-                    /* {value.labelEdudirection} */
-                  }
+                  // {
+                  //   /* {value.labelEdudirection} */
+                  // }
                   return (
                     <div key={value.value}>
-                      <Dropdown text={value.label} items={result} />
+                      <Dropdown
+                        text={value.label}
+                        group={group._id}
+                        items={group.result.filter(
+                          (result) => result.programId === value.value
+                        )}
+                      />
                     </div>
                   )
                 })}

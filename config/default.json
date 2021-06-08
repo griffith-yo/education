@@ -1,0 +1,10 @@
+{
+  "port": 5000,
+  "jwtSecret": "vladislav mern",
+  "mongoUri": "mongodb://vladislav:1ntr5P78nt@localhost:27017/app",
+  "baseUrl": "http://localhost:5000",
+  "storageName": "userData",
+  "avatarPath": "./client/public/uploads/avatar/",
+  "programGalleryPath": "./client/public/uploads/program/gallery/",
+  "programPDFPath": "./client/public/uploads/program/pdf/"
+}

@@ -6,7 +6,7 @@ const Dropdown = ({ text, items }) => {
     <div className="btn-group dropdown">
       <button
         type="button"
-        className="btn btn-secondary dropdown-toggle"
+        className="btn btn--secondary dropdown-toggle"
         data-bs-toggle="dropdown"
         aria-expanded="false"
       >

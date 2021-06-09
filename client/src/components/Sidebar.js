@@ -78,12 +78,7 @@ export const Sidebar = () => {
             </NavLink>
           </li>
           <li className="nav-item my-1">
-            <Link
-              className="nav-link d-md-none"
-              to="#"
-              activeClassName="active"
-              onClick={logoutHandler}
-            >
+            <Link className="nav-link d-md-none" to="#" onClick={logoutHandler}>
               <LogOut size={iconSize} />
               &nbsp; Выход
             </Link>

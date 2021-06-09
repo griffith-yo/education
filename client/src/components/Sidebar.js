@@ -1,14 +1,31 @@
-import React from 'react'
-import { NavLink } from 'react-router-dom'
+import React, { useContext } from 'react'
+import { Link, NavLink, useHistory } from 'react-router-dom'
+import {
+  Home,
+  Users,
+  BookOpen,
+  Box,
+  FileText,
+  Briefcase,
+  LogOut,
+} from 'react-feather'
 import ToastComponent from '../components/Toast'
-import { Home, Users, BookOpen, Box, FileText, Briefcase } from 'react-feather'
+import { AuthContext } from '../context/AuthContext'
 
 export const Sidebar = () => {
   const iconSize = 24
+  const history = useHistory()
+  const auth = useContext(AuthContext)
+
+  const logoutHandler = (event) => {
+    auth.logout()
+    history.push('/')
+  }
+
   return (
     <nav
       id="sidebarMenu"
-      className="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse"
+      className="col-md-3 col-lg-2 d-md-block bg-secondary sidebar collapse"
     >
       <div className="position-sticky pt-3">
         <ul className="nav flex-column">
@@ -54,21 +71,22 @@ export const Sidebar = () => {
               &nbsp; Программы обучения
             </NavLink>
           </li>
-          {/* <li className="nav-item">
-            <NavLink
-              className="nav-link"
-              to="/questions"
-              activeClassName="active"
-            >
-              <HelpCircle size={iconSize} />
-              &nbsp; Вопросы
-            </NavLink>
-          </li> */}
           <li className="nav-item my-1">
             <NavLink className="nav-link" to="/result" activeClassName="active">
               <FileText size={iconSize} />
               &nbsp; Результаты
             </NavLink>
+          </li>
+          <li className="nav-item my-1">
+            <Link
+              className="nav-link d-md-none"
+              to="#"
+              activeClassName="active"
+              onClick={logoutHandler}
+            >
+              <LogOut size={iconSize} />
+              &nbsp; Выход
+            </Link>
           </li>
         </ul>
       </div>

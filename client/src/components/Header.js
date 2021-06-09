@@ -7,7 +7,6 @@ export const Header = () => {
   const auth = useContext(AuthContext)
 
   const logoutHandler = (event) => {
-    event.preventDefault()
     auth.logout()
     history.push('/')
   }
@@ -36,28 +35,26 @@ export const Header = () => {
           aria-label="Поиск"
         />
       ) : null} */}
-      <ul className="nav px-3">
-        <li className="nav-item dropdown">
-          <button
-            className="btn btn-dark nav-link dropdown-toggle text-light"
-            data-bs-toggle="dropdown"
-            href="#"
-            aria-expanded="false"
-          >
-            {auth.username}
-          </button>
-          <ul className="dropdown-menu">
-            <li>
-              <Link className="dropdown-item" to="/">
-                Главная
-              </Link>
-              <Link className="dropdown-item" to="#" onClick={logoutHandler}>
-                Выход
-              </Link>
-            </li>
-          </ul>
-        </li>
-      </ul>
+      <div className="nav-item dropdown text-nowrap d-none d-md-block d-lg-block d-xl-block">
+        <button
+          className="btn btn-dark dropdown-toggle text-light"
+          data-bs-toggle="dropdown"
+          type="button"
+          aria-expanded="false"
+        >
+          {auth.username}
+        </button>
+        <ul className="dropdown-menu dropdown-menu-end">
+          <li>
+            <Link className="dropdown-item" to="/">
+              Главная
+            </Link>
+            <Link className="dropdown-item" to="#" onClick={logoutHandler}>
+              Выход
+            </Link>
+          </li>
+        </ul>
+      </div>
     </header>
   )
 }

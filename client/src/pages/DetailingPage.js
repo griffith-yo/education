@@ -1,32 +1,25 @@
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-  useRef,
-} from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useHttp } from '../hooks/http.hook'
 import { AuthContext } from '../context/AuthContext'
 import { Loader } from '../components/Loader'
 import { useMessage } from '../hooks/message.hook'
 import { Save } from 'react-feather'
-// import Pdf from 'react-to-pdf'
-import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer'
+import ReactPDF, {
+  PDFDownloadLink,
+  PDFViewer,
+  usePDF,
+} from '@react-pdf/renderer'
 import DetailingList from '../components/DetailingList'
-// import Page from '../components/Page'
+import Page from '../components/Page'
+import PdfDetailingList from '../components/PdfDetailingList'
+import Spinner from '../components/Spinner'
 
 export const DetailingPage = () => {
   const userID = useParams().userID
   const groupID = useParams().groupID
   const programID = useParams().programID
   const attempt = useParams().attempt
-  const PDF = useRef()
-  const PDFoptions = {
-    orientation: 'portrait',
-    // unit: 'mm',
-    // format: 'a4',
-  }
 
   const { loading, request, error, clearError, success, clearSuccess } =
     useHttp()
@@ -100,35 +93,29 @@ export const DetailingPage = () => {
   if (loading) {
     return <Loader />
   }
-
   return (
     <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4">
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <span>
           <h1 className="h2">
-            {/* <Pdf
-              targetRef={PDF}
-              filename={`${detailing.user}.pdf`}
-              options={PDFoptions}
-              // x={5}
-              // y={5}
-              // scale={0.9}
+            <PDFDownloadLink
+              className="btn btn-outline-primary shadow"
+              document={<PdfDetailingList detailing={detailing} />}
+              fileName={detailing.user + '.pdf'}
             >
-              {({ toPdf }) => (
-                <button
-                  className="btn btn-outline-primary shadow"
-                  onClick={toPdf}
-                >
-                  <Save />
-                </button>
-              )}
-            </Pdf> */}
+              {({ blob, url, loadingPdf, error }) =>
+                loadingPdf ? <Spinner size={1} /> : <Save />
+              }
+            </PDFDownloadLink>
             &nbsp; Детализация
           </h1>
         </span>
       </div>
-      {/* <Page>
-        <div className="p-5" ref={PDF}>
+      <PDFViewer>
+        <PdfDetailingList detailing={detailing} />
+      </PDFViewer>
+      <Page>
+        <div className="p-5">
           <div className="mb-4">
             <h4>{detailing.user}</h4>
             <hr />
@@ -141,7 +128,7 @@ export const DetailingPage = () => {
           </div>
           <DetailingList detailing={detailing} />
         </div>
-      </Page> */}
+      </Page>
     </main>
   )
 }

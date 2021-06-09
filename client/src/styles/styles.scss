@@ -12,40 +12,6 @@ svg {
   vertical-align: text-bottom;
 }
 
-/*
- * Sidebar
- */
-
-.sidebar {
-  position: fixed;
-  top: 0;
-  /* rtl:raw:
-  right: 0;
-  */
-  bottom: 0;
-  /* rtl:remove */
-  left: 0;
-  z-index: 100; /* Behind the navbar */
-  padding: 48px 0 0; /* Height of navbar */
-  box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.1);
-}
-
-@media (max-width: 767.98px) {
-  .sidebar {
-    top: 5rem;
-  }
-}
-
-.form-signin {
-  width: 100%;
-  max-width: 330px;
-  padding: 15px;
-  margin-top: 10%;
-  margin-left: auto;
-  margin-right: auto;
-  text-align: center;
-}
-
 .form-signin .checkbox {
   font-weight: 400;
 }
@@ -80,6 +46,36 @@ svg {
   }
 }
 
+/*
+ * Sidebar
+ */
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 100; /* Behind the navbar */
+  padding: 48px 0 0; /* Height of navbar */
+  box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.1);
+}
+
+// @media (max-width: 767.98px) {
+//   .sidebar {
+//     top: 5rem;
+//   }
+// }
+
+.form-signin {
+  width: 100%;
+  max-width: 330px;
+  padding: 15px;
+  margin-top: 10%;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
 .sidebar-sticky {
   position: relative;
   top: 0;
@@ -91,7 +87,7 @@ svg {
 
 .sidebar .nav-link {
   font-weight: 500;
-  color: #333;
+  color: #e4e4e4;
 }
 
 .sidebar .nav-link .feather {
@@ -100,7 +96,9 @@ svg {
 }
 
 .sidebar .nav-link.active {
-  color: #007bff;
+  // color: #007bff;
+  color: #000;
+  background: #fff;
 }
 
 .sidebar .nav-link:hover .feather,
@@ -121,8 +119,9 @@ svg {
   padding-top: 0.75rem;
   padding-bottom: 0.75rem;
   font-size: 1rem;
-  background-color: rgba(0, 0, 0, 0.25);
-  box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.25);
+  // background-color: rgba(0, 0, 0, 0.25);
+  // background-color: #fff;
+  // box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.25);
 }
 
 .navbar .navbar-toggler {

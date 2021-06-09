@@ -35,8 +35,10 @@ function App() {
       <Router>
         {isAuthenticated && <Header />}
         <div className="container-fluid">
-          {isAuthenticated && privileges !== '1' && <Sidebar />}
-          {routes}
+          <div className="row">
+            {isAuthenticated && privileges !== '1' && <Sidebar />}
+            {routes}
+          </div>
         </div>
         <FooterInterval />
         <Footer />

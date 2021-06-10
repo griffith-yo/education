@@ -13,6 +13,7 @@ import {
 import TimesNewRoman from '../styles/fonts/Times-New-Roman.ttf'
 import { useEffect } from 'react'
 import { useState } from 'react'
+import * as fs from 'fs'
 
 Font.register({
   family: 'Roboto',

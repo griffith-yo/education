@@ -105,7 +105,7 @@ export const ProgramPage = () => {
         // Сначала записываем массив файлов в Formdata
         const fileData = new FormData()
         let arr = []
-        for (var i = 0; i < event.target.files.length; i++) {
+        for (let i = 0; i < event.target.files.length; i++) {
           fileData.append(event.target.name, event.target.files[i])
         }
 

@@ -4,23 +4,16 @@ import { useHttp } from '../hooks/http.hook'
 import { AuthContext } from '../context/AuthContext'
 import { Loader } from '../components/Loader'
 import { useMessage } from '../hooks/message.hook'
-import { Save } from 'react-feather'
-import ReactPDF, {
-  PDFDownloadLink,
-  PDFViewer,
-  usePDF,
-} from '@react-pdf/renderer'
 import DetailingList from '../components/DetailingList'
 import Page from '../components/Page'
-import PdfDetailingList from '../components/PdfDetailingList'
-import Spinner from '../components/Spinner'
+import WordSaveButton from '../components/WordSaveButton'
+import { detailingTemplate } from '../components/WordTemplates/detailing.template'
 
 export const DetailingPage = () => {
   const userID = useParams().userID
   const groupID = useParams().groupID
   const programID = useParams().programID
   const attempt = useParams().attempt
-
   const { loading, request, error, clearError, success, clearSuccess } =
     useHttp()
   const { token } = useContext(AuthContext)
@@ -98,7 +91,12 @@ export const DetailingPage = () => {
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <span>
           <h1 className="h2">
-            <PDFDownloadLink
+            {/* <HtmlToDocx detailing={detailing} /> */}
+            <WordSaveButton
+              data={detailingTemplate(detailing)}
+              filename={detailing.user}
+            />
+            {/* <PDFDownloadLink
               className="btn btn-outline-primary shadow"
               document={<PdfDetailingList detailing={detailing} />}
               fileName={detailing.user + '.pdf'}
@@ -106,14 +104,11 @@ export const DetailingPage = () => {
               {({ blob, url, loadingPdf, error }) =>
                 loadingPdf ? <Spinner size={1} /> : <Save />
               }
-            </PDFDownloadLink>
+            </PDFDownloadLink> */}
             &nbsp; Детализация
           </h1>
         </span>
       </div>
-      <PDFViewer>
-        <PdfDetailingList detailing={detailing} />
-      </PDFViewer>
       <Page>
         <div className="p-5">
           <div className="mb-4">

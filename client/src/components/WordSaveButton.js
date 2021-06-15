@@ -8,7 +8,7 @@ const WordSaveButton = ({ data, filename }) => {
   const generate = () =>
     Packer.toBlob(data).then((blob) => {
       console.log(blob)
-      saveAs(blob, filename + 'docx')
+      saveAs(blob, filename)
       console.log('Document created successfully')
     })
   return (

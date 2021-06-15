@@ -3,10 +3,14 @@ import {
   Paragraph,
   TextRun,
   Header,
+  Footer,
+  FrameAnchorType,
+  HorizontalPositionAlign,
+  VerticalPositionAlign,
   ShadingType,
   UnderlineType,
   AlignmentType,
-  convertInchesToTwip,
+  convertMillimetersToTwip,
   HeadingLevel,
   LevelFormat,
   Table,
@@ -14,7 +18,9 @@ import {
   TableRow,
   VerticalAlign,
   TextDirection,
+  WidthType,
 } from 'docx'
+import { HEADER, FOOTER } from './blank.template'
 
 export const detailingTemplate = (detailing) => {
   const resultString = detailing.passed ? 'Пройден' : 'Не пройден'
@@ -54,22 +60,6 @@ export const detailingTemplate = (detailing) => {
             },
           },
         },
-        heading2: {
-          run: {
-            size: 26,
-            bold: true,
-            underline: {
-              type: UnderlineType.DOUBLE,
-              color: 'FF0000',
-            },
-          },
-          paragraph: {
-            spacing: {
-              before: 240,
-              after: 120,
-            },
-          },
-        },
         listParagraph: {
           run: {
             color: '#FF0000',
@@ -99,19 +89,6 @@ export const detailingTemplate = (detailing) => {
             // },
           },
         },
-        // {
-        //   id: 'wellSpaced',
-        //   name: 'Well Spaced',
-        //   basedOn: 'Normal',
-        //   quickFormat: true,
-        //   paragraph: {
-        //     spacing: {
-        //       line: 276,
-        //       before: 20 * 72 * 0.1,
-        //       after: 20 * 72 * 0.05,
-        //     },
-        //   },
-        // },
         {
           id: 'tableHead',
           name: 'Table Head',
@@ -164,7 +141,18 @@ export const detailingTemplate = (detailing) => {
     },
     sections: [
       {
-        properties: {},
+        headers: HEADER,
+        footers: FOOTER,
+        properties: {
+          page: {
+            margin: {
+              top: convertMillimetersToTwip(20),
+              right: convertMillimetersToTwip(10),
+              bottom: convertMillimetersToTwip(40),
+              left: convertMillimetersToTwip(20),
+            },
+          },
+        },
         children: [
           new Paragraph({
             text: detailing.user,
@@ -226,6 +214,10 @@ export const detailingTemplate = (detailing) => {
             style: 'aside',
           }),
           new Table({
+            width: {
+              size: 100,
+              type: WidthType.PERCENTAGE,
+            },
             rows: [
               new TableRow({
                 children: [

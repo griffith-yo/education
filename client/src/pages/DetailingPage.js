@@ -109,21 +109,19 @@ export const DetailingPage = () => {
           </h1>
         </span>
       </div>
-      <Page>
-        <div className="p-5">
-          <div className="mb-4">
-            <h4>{detailing.user}</h4>
-            <hr />
-            <p>Группа: {detailing.group}</p>
-            <p>Программа обучения: {detailing.program}</p>
-            <p>Попытка: {detailing.attempt}</p>
-            <p>
-              Колличество баллов: {detailing.scores} из {detailing.scoresMax}
-            </p>
-          </div>
-          <DetailingList detailing={detailing} />
+      <div className="p-5">
+        <div className="mb-4">
+          <h4>{detailing.user}</h4>
+          <hr />
+          <p>Группа: {detailing.group}</p>
+          <p>Программа обучения: {detailing.program}</p>
+          <p>Попытка: {detailing.attempt}</p>
+          <p>
+            Колличество баллов: {detailing.scores} из {detailing.scoresMax}
+          </p>
         </div>
-      </Page>
+        <DetailingList detailing={detailing} />
+      </div>
     </main>
   )
 }

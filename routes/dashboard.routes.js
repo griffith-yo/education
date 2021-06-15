@@ -11,13 +11,13 @@ const router = Router()
 
 router.get('/', auth, async (req, res) => {
   try {
-    const users = await User.find({}).count()
-    const organizations = await Organization.find({}).count()
-    const groups = await Group.find({}).count()
-    const programs = await Program.find({}).count()
+    const users = await User.find({}).countDocuments()
+    const organizations = await Organization.find({}).countDocuments()
+    const groups = await Group.find({}).countDocuments()
+    const programs = await Program.find({}).countDocuments()
     const results = await Result.find({})
     const realResults = results.filter((result) => result.attempt !== 0)
-    const edudirections = await Edudirection.find({}).count()
+    const edudirections = await Edudirection.find({}).countDocuments()
 
     res.status(200).json({
       users,

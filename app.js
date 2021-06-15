@@ -30,24 +30,15 @@ app.use(
   express.static(path.join(__dirname, 'client', 'public', 'uploads', 'program'))
 )
 
-// // Задаем папки по умолчанию
-// if (process.env.NODE_ENV === 'production') {
-//   app.use('/', express.static(path.join(__dirname, 'client')))
+// Задаем папки по умолчанию
+if (process.env.NODE_ENV === 'production') {
+  app.use('/', express.static(path.join(__dirname, 'client', 'build')))
 
-//   // А на любые другие запросы отправлять на файл index.html
-//   app.get('*', (req, res) => {
-//     res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
-//   })
-// }
-
-// if (process.env.NODE_ENV === 'development') {
-//   app.use('/', express.static(path.join(__dirname, 'client')))
-
-//   // А на любые другие запросы отправлять на файл index.html
-//   app.get('*', (req, res) => {
-//     res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
-//   })
-// }
+  // А на любые другие запросы отправлять на файл index.html
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
+  })
+}
 
 const PORT = config.get('port') || 5000
 

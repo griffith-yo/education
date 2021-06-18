@@ -19,9 +19,7 @@ router.get('/', auth, async (req, res) => {
             _id: organization._id,
             name: organization.name,
             email: organization.email,
-            groups: organization.groups.length
-              ? await mapSelectedGroups(organization.groups)
-              : 'Групп нет',
+            groups: await mapSelectedGroups(organization.groups),
             users: await mapSelectedUsers(organization.users),
           }
         })

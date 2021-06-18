@@ -16,9 +16,7 @@ router.get('/', auth, async (req, res) => {
         users.map(async (user) => {
           return {
             ...user._doc,
-            organizations: user.organizations.length
-              ? await mapSelectedOrganizations(user.organizations)
-              : 'Организаций нет',
+            organizations: await mapSelectedOrganizations(user.organizations),
           }
         })
       )

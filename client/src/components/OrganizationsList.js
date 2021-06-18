@@ -46,7 +46,7 @@ const OrganizationsList = ({ deleteHandler, getPaginatedData }) => {
                 })}
               </td>
               <td className="align-middle w-20">
-                {organization.groups.constructor === Array
+                {organization.groups.length
                   ? organization.groups.map((group, index) => {
                       return (
                         <div key={group.value}>
@@ -59,7 +59,7 @@ const OrganizationsList = ({ deleteHandler, getPaginatedData }) => {
                         </div>
                       )
                     })
-                  : organization.groups}
+                  : 'Групп нет'}
               </td>
               <td className="align-middle text-center w-5">
                 <Link

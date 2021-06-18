@@ -37,7 +37,7 @@ const UsersList = ({ deleteHandler, getPaginatedData }) => {
               <td className="align-middle w-15">{user.email}</td>
               <td className="align-middle w-20">{user.post}</td>
               <td className="align-middle w-20">
-                {user.organizations.constructor === Array
+                {user.organizations.length
                   ? user.organizations.map((organization, index) => (
                       <div key={organization.value}>
                         <Link
@@ -48,7 +48,7 @@ const UsersList = ({ deleteHandler, getPaginatedData }) => {
                         </Link>
                       </div>
                     ))
-                  : user.organizations}
+                  : 'Организаций нет'}
               </td>
               <td className="align-middle text-center w-5">
                 <Link to={`/user/${user._id}`} className="btn text-primary">

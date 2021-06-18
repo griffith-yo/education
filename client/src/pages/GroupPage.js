@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react'
-import { useParams, useHistory } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { useHttp } from '../hooks/http.hook'
 import { useMessage } from '../hooks/message.hook'
 import { AuthContext } from '../context/AuthContext'
@@ -30,7 +30,6 @@ export const GroupPage = () => {
     optionsUsers: [],
     optionsPrograms: [],
   })
-  let history = useHistory()
 
   // Обработка всплывающих окон
   useEffect(() => {
@@ -102,35 +101,21 @@ export const GroupPage = () => {
     } catch (e) {}
   }, [token, request])
 
-  // Обработка информации для создания группы
-  const createHandler = useCallback(async () => {
-    try {
-      await request(
-        '/api/create/group',
-        'POST',
-        { ...form },
-        {
-          Authorization: `Bearer ${token}`,
-        }
-      )
-      history.push('/groups')
-    } catch (e) {}
-  }, [form, history, request, token])
-
-  // Обработка информации для обновления группы
-  const updateHandler = useCallback(async () => {
-    try {
-      await request(
-        '/api/update/group',
-        'POST',
-        { ...form },
-        {
-          Authorization: `Bearer ${token}`,
-        }
-      )
-      history.push('/groups')
-    } catch (e) {}
-  }, [form, history, request, token])
+  const actionHandler = useCallback(
+    async (action) => {
+      try {
+        await request(
+          `/api/${action}/group`,
+          'POST',
+          { ...form },
+          {
+            Authorization: `Bearer ${token}`,
+          }
+        )
+      } catch (e) {}
+    },
+    [form, request, token]
+  )
 
   // Вывод информации об организации в зависимости от состояния на странице
   useEffect(() => {
@@ -243,9 +228,8 @@ export const GroupPage = () => {
           </div>
         </div>
         <SubmitButton
-          _id={_id}
-          createHandler={createHandler}
-          updateHandler={updateHandler}
+          text={_id ? 'Обновить' : 'Создать'}
+          onClick={() => actionHandler(_id ? 'update' : 'create')}
           loading={loading}
         />
       </form>

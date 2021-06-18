@@ -1,23 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-const SubmitButton = ({
-  _id,
-  createHandler,
-  updateHandler,
-  loading,
-  onClick,
-  width,
-  login,
-  questions,
-}) => {
-  let buttonContent = login
-    ? 'Войти'
-    : questions
-    ? 'Сохранить'
-    : _id
-    ? 'Обновить'
-    : 'Создать'
+const SubmitButton = ({ text, loading, onClick, width }) => {
+  let buttonContent = text
 
   if (loading) {
     buttonContent = (
@@ -39,7 +24,7 @@ const SubmitButton = ({
         <button
           className="btn btn-primary btn-lg w-100 shadow"
           type="button"
-          onClick={onClick ? onClick : _id ? updateHandler : createHandler}
+          onClick={onClick}
           disabled={loading}
         >
           {buttonContent}
@@ -50,13 +35,9 @@ const SubmitButton = ({
 }
 
 SubmitButton.propTypes = {
-  _id: PropTypes.string,
-  createHandler: PropTypes.func,
-  updateHandler: PropTypes.func,
-  onClick: PropTypes.func,
+  text: PropTypes.string.isRequired,
+  onClick: PropTypes.func.isRequired,
   width: PropTypes.string,
-  login: PropTypes.bool,
-  questions: PropTypes.bool,
   loading: PropTypes.bool.isRequired,
 }
 

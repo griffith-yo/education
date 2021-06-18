@@ -71,13 +71,10 @@ const SidebarPageBody = ({ header, target, dashboardInfo, children }) => {
         await request(`/api/delete/${target}/${_id}`, 'DELETE', null, {
           Authorization: `Bearer ${token}`,
         })
-        const fetched = await request(`/api/${target}`, 'GET', null, {
-          Authorization: `Bearer ${token}`,
-        })
-        setData((prev) => fetched)
+        await fetch()
       } catch (e) {}
     },
-    [token, request, target]
+    [token, request, target, fetch]
   )
 
   const fetchSearch = useCallback(

@@ -1,7 +1,5 @@
 import {
-  Document,
   Paragraph,
-  TextRun,
   ShadingType,
   ImageRun,
   Header,
@@ -11,12 +9,10 @@ import {
   HorizontalPositionAlign,
   convertMillimetersToTwip,
 } from 'docx'
-import header from '../../img/header.png'
 import footer from '../../img/footer2.png'
 
 const mainColor = '#002344'
 const secondaryColor = '#2cd283'
-const shadowSecondaryColor = '#19966d'
 
 export const HEADER = {
   default: new Header({

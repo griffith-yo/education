@@ -8,6 +8,9 @@ import { useMessage } from '../../hooks/message.hook'
 import { Pagination } from '../../components/Pagination'
 import { usePagination } from '../../hooks/pagination.hook'
 
+const DATA_LIMIT = 10
+const PAGE_LIMIT = 3
+
 export const HomePage = () => {
   const [courses, setCourses] = useState([])
   const { loading, request, error, clearError, success, clearSuccess } =
@@ -19,9 +22,6 @@ export const HomePage = () => {
   // Состояние успеха при заполнении форм
   const [successForm, setSuccessForm] = useState(null)
 
-  const dataLimit = 10
-  const pageLimit = 3
-
   const {
     pages,
     currentPage,
@@ -32,8 +32,8 @@ export const HomePage = () => {
     getPaginationGroup,
   } = usePagination({
     data: courses,
-    pageLimit,
-    dataLimit,
+    PAGE_LIMIT,
+    DATA_LIMIT,
   })
 
   // Обработка всплывающих окон
@@ -62,7 +62,7 @@ export const HomePage = () => {
         Authorization: `Bearer ${token}`,
         UserID: userId,
       })
-      setCourses(fetched)
+      setCourses((prev) => fetched)
     } catch (e) {}
   }, [token, request, userId])
 

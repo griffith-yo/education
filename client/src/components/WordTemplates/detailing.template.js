@@ -2,13 +2,7 @@ import {
   Document,
   Paragraph,
   TextRun,
-  Header,
-  Footer,
-  FrameAnchorType,
-  HorizontalPositionAlign,
-  VerticalPositionAlign,
   ShadingType,
-  UnderlineType,
   AlignmentType,
   convertMillimetersToTwip,
   HeadingLevel,
@@ -17,7 +11,6 @@ import {
   TableCell,
   TableRow,
   VerticalAlign,
-  TextDirection,
   WidthType,
 } from 'docx'
 import { HEADER, FOOTER } from './blank.template'

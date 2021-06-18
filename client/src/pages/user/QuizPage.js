@@ -72,7 +72,7 @@ export const QuizPage = () => {
       const fetched = await request(`/api/program/${programID}`, 'GET', null, {
         Authorization: `Bearer ${token}`,
       })
-      setProgramInfo(fetched)
+      setProgramInfo((prev) => fetched)
     } catch (e) {}
   }, [programID, token, request])
 
@@ -96,7 +96,6 @@ export const QuizPage = () => {
     } catch (e) {}
   }, [programID, history, groupID, token, request, result, userId])
 
-  // Вывод информации об организации в зависимости от состояния на странице
   useEffect(() => {
     getData()
   }, [getData])

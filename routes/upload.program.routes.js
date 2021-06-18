@@ -1,10 +1,10 @@
 const { Router } = require('express')
-const auth = require('../middleware/auth.middleware')
 const router = Router()
 const path = require('path')
-const Program = require('../models/Program')
 const config = require('config')
 const multer = require('multer')
+const Program = require('../models/Program')
+const auth = require('../middleware/auth.middleware')
 const { getRandomBetween } = require('../hook/helpers')
 
 // Set Storage Engine
@@ -59,8 +59,7 @@ const cpUpload = upload.fields([
 
 router.post('/', auth, (req, res) => {
   console.log('Обработка загрузки изображения')
-
-  cpUpload(req, res, (err) => {
+  cpUpload(req, res, async (err) => {
     if (err instanceof multer.MulterError) {
       // Случилась ошибка Multer при загрузке.
       console.log(err)
@@ -70,32 +69,23 @@ router.post('/', auth, (req, res) => {
       console.log(err)
       res.status(400).json({ message: err })
     }
-    const files = req.files
-    console.log(files)
-    console.log('Файлы загружены')
+    const newGallery = req.files.gallery
+    const newPdf = req.files.pdf
 
-    return res.status(201).json({
-      files,
-      message: 'Галерея пополнена',
-    })
-  })
-})
-
-router.post('/pathtodb', auth, async (req, res) => {
-  try {
-    // То, что приходит в фронтенд (Получаем из body эти значения)
-    const { _id, gallery, pdf } = req.body
+    const { _id } = req.body
 
     // Поиск человека по login
+    const program = await Program.findById(_id)
+
     await Program.findByIdAndUpdate(_id, {
-      gallery,
-      pdf,
+      gallery: newGallery
+        ? [...program.gallery, ...newGallery]
+        : program.gallery,
+      pdf: newPdf ? [...program.pdf, ...newPdf] : program.pdf,
     })
 
-    res.status(201).json({ message: 'Программа обучения обновлена' })
-  } catch (e) {
-    res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
-  }
+    return res.status(201).json({ message: 'Галерея пополнена' })
+  })
 })
 
 module.exports = router

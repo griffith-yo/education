@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react'
-import { useParams, useHistory } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { useHttp } from '../hooks/http.hook'
 import { useMessage } from '../hooks/message.hook'
 import { AuthContext } from '../context/AuthContext'
@@ -34,7 +34,6 @@ export const UserPage = () => {
     avatar: '',
     organizations: [{ value: '', label: '' }],
   })
-  let history = useHistory()
 
   // Получение информации о пользователе, если мы изменяем его
   const getData = useCallback(async () => {
@@ -52,34 +51,21 @@ export const UserPage = () => {
   }, [_id, request, token])
 
   // Обработка информации для создания пользователя
-  const createHandler = useCallback(async () => {
-    try {
-      await request(
-        '/api/create/user',
-        'POST',
-        { ...form },
-        {
-          Authorization: `Bearer ${token}`,
-        }
-      )
-      history.push('/users')
-    } catch (e) {}
-  }, [form, history, request, token])
-
-  // Обработка информации для обновления пользователя
-  const updateHandler = useCallback(async () => {
-    try {
-      await request(
-        '/api/update/user',
-        'POST',
-        { ...form },
-        {
-          Authorization: `Bearer ${token}`,
-        }
-      )
-      history.push('/users')
-    } catch (e) {}
-  }, [form, history, request, token])
+  const actionHandler = useCallback(
+    async (action) => {
+      try {
+        await request(
+          `/api/${action}/user`,
+          'POST',
+          { ...form },
+          {
+            Authorization: `Bearer ${token}`,
+          }
+        )
+      } catch (e) {}
+    },
+    [form, request, token]
+  )
 
   // Обработка загрузки файла
   const fileHandler = useCallback(
@@ -94,8 +80,6 @@ export const UserPage = () => {
           fileData,
           {
             Authorization: `Bearer ${token}`,
-            // 'Content-Type':
-            //   'multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW',
           },
           true
         )
@@ -103,7 +87,6 @@ export const UserPage = () => {
           return { ...prev, avatar: fileAnswer.file }
         })
         setSuccessForm((prev) => (prev = 'Фотография загружена'))
-        return
       } catch (e) {}
     },
     [token, request]
@@ -281,9 +264,8 @@ export const UserPage = () => {
           </div>
         </div>
         <SubmitButton
-          _id={_id}
-          createHandler={createHandler}
-          updateHandler={updateHandler}
+          text={_id ? 'Обновить' : 'Создать'}
+          onClick={() => actionHandler(_id ? 'update' : 'create')}
           loading={loading}
         />
       </form>

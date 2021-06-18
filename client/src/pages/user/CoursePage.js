@@ -99,7 +99,7 @@ export const CoursePage = () => {
         <SectionsList
           currentSection={currentSection}
           sections={form.sections}
-          onClickHandler={onClickHandler}
+          onClick={onClickHandler}
         />
       </div>
       <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4">

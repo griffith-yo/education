@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-const SectionsList = ({ sections, onClickHandler, currentSection }) => {
+const SectionsList = ({ sections, onClick, currentSection }) => {
   return (
     <div className="list-group" role="tablist">
       {sections.map((section, index) => {
@@ -17,7 +17,7 @@ const SectionsList = ({ sections, onClickHandler, currentSection }) => {
                 currentSection.index === index ? 'active' : ''
               }`}
               role="tab"
-              onClick={(event) => onClickHandler(event, index)}
+              onClick={(event) => onClick(event, index)}
             >
               {'Раздел ' + (index + 1) + '. ' + section.sectionName}
             </button>
@@ -30,7 +30,7 @@ const SectionsList = ({ sections, onClickHandler, currentSection }) => {
 
 SectionsList.propTypes = {
   sections: PropTypes.arrayOf(PropTypes.object).isRequired,
-  onClickHandler: PropTypes.func.isRequired,
+  onClick: PropTypes.func.isRequired,
   currentSection: PropTypes.object.isRequired,
 }
 

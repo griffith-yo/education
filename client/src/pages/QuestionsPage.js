@@ -52,7 +52,7 @@ export const QuestionsPage = () => {
 
   useEffect(() => {
     fetchQuestions()
-  }, [fetchQuestions, _id])
+  }, [fetchQuestions])
 
   const changeAnswerHandler = (event, questionIndex, answerIndex) => {
     setQuestions((prev) => {
@@ -94,7 +94,6 @@ export const QuestionsPage = () => {
           Authorization: `Bearer ${token}`,
         }
       )
-      // setProgramInfo((prev) => (prev = fetched))
     } catch (e) {}
   }, [request, token, questions, programInfo._id])
 
@@ -151,10 +150,9 @@ export const QuestionsPage = () => {
           )
         })}
         <SubmitButton
-          _id={_id}
+          text={'Сохранить'}
           onClick={saveQuestions}
           loading={loading}
-          questions={true}
         />
       </form>
     </main>

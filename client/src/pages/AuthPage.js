@@ -14,7 +14,6 @@ export const AuthPage = () => {
     login: '',
     password: '',
   })
-  const date = new Date()
 
   useEffect(() => {
     if (error !== null) {
@@ -23,19 +22,17 @@ export const AuthPage = () => {
     }
   }, [showToast, clearError, error])
 
-  // Записываем в состояние формы изменяющийся массив инпутов
   const changeHandler = (event) => {
     setForm({ ...form, [event.target.name]: event.target.value })
   }
 
-  const registerHandler = async () => {
-    try {
-      await request('/api/auth/register', 'POST', { ...form })
-    } catch (e) {}
-  }
+  // const registerHandler = async () => {
+  //   try {
+  //     await request('/api/auth/register', 'POST', { ...form })
+  //   } catch (e) {}
+  // }
 
-  // Обработка нажатия кнопки "Войти"
-  const loginHandler = async () => {
+  const actionHandler = async () => {
     try {
       const data = await request('/api/auth/login', 'POST', { ...form })
       auth.login(data.token, data.userId, data.name, data.privileges)
@@ -71,10 +68,10 @@ export const AuthPage = () => {
         <label htmlFor="password">Пароль</label>
       </div>
       <SubmitButton
-        onClick={loginHandler}
+        text={'Войти'}
+        onClick={actionHandler}
         width={'w-100'}
         loading={loading}
-        login={true}
       />
       <br />
       {/* <button
@@ -86,7 +83,7 @@ export const AuthPage = () => {
         Регистрация
       </button> */}
       <p className="mb-3 text-muted">
-        &copy; EntryPoint 2020 – {date.getFullYear()}
+        &copy; EntryPoint 2020 – {new Date().getFullYear()}
       </p>
       <ToastComponent />
     </main>

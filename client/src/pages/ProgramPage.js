@@ -5,7 +5,7 @@ import React, {
   useState,
   useMemo,
 } from 'react'
-import { useParams, useHistory } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { useHttp } from '../hooks/http.hook'
 import { useMessage } from '../hooks/message.hook'
 import { AuthContext } from '../context/AuthContext'
@@ -38,11 +38,8 @@ export const ProgramPage = () => {
     pdf: [],
     sections: [{ _id: '', sectionTheme: '', sectionName: '', sectionBody: '' }],
   })
-  const fileData = useMemo(() => new FormData(), [])
   const [edudir, setEdudir] = useState([])
-  // Состояние - флаг с названием загруженных файлов
-  const [files, setFiles] = useState('')
-  let history = useHistory()
+  const fileData = useMemo(() => new FormData(), [])
 
   const getEdudir = useCallback(async () => {
     try {
@@ -75,45 +72,31 @@ export const ProgramPage = () => {
     } catch (e) {}
   }, [_id, request, token])
 
-  const createHandler = useCallback(async () => {
-    try {
-      const newProgram = await request(
-        '/api/create/program',
-        'POST',
-        { ...form },
-        {
-          Authorization: `Bearer ${token}`,
-        }
-      )
-      setForm(newProgram)
-      history.push(`/program/${newProgram._id}`)
-    } catch (e) {}
-  }, [form, history, request, token])
-
-  const updateHandler = useCallback(async () => {
-    try {
-      await request(
-        '/api/update/program',
-        'POST',
-        { ...form },
-        {
-          Authorization: `Bearer ${token}`,
-        }
-      )
-      history.push('/programs')
-    } catch (e) {}
-  }, [form, history, request, token])
+  const actionHandler = useCallback(
+    async (action) => {
+      try {
+        await request(
+          `/api/${action}/program`,
+          'POST',
+          { ...form },
+          {
+            Authorization: `Bearer ${token}`,
+          }
+        )
+      } catch (e) {}
+    },
+    [form, request, token]
+  )
 
   const fileHandler = useCallback(
     async (event) => {
       try {
-        let arr = []
         for (let i = 0; i < event.target.files.length; i++) {
           fileData.append(event.target.name, event.target.files[i])
         }
+        fileData.append('_id', _id)
 
-        // Запрос на запись файлов с ответом в виде массива объектов
-        const fileAnswer = await request(
+        await request(
           `/api/upload/program/`,
           'POST',
           fileData,
@@ -122,50 +105,11 @@ export const ProgramPage = () => {
           },
           true
         )
-
-        // Записываем ответные данные в состояние формы
-        if (form[event.target.name]) {
-          arr = form[event.target.name].concat(
-            fileAnswer.files[event.target.name]
-          )
-        } else {
-          arr = fileAnswer.files[event.target.name]
-        }
-        setForm((prev) => {
-          return { ...prev, [event.target.name]: arr }
-        })
-        setFiles(event.target.name)
+        await getData()
       } catch (e) {}
     },
-    [form, request, token, fileData]
+    [request, token, fileData, getData, _id]
   )
-
-  // Запрос на запись со списком файлов в поле БД
-  const pathToDB = useCallback(async () => {
-    try {
-      await request(
-        `/api/upload/program/pathtodb`,
-        'POST',
-        { ...form },
-        {
-          Authorization: `Bearer ${token}`,
-        }
-      )
-    } catch (e) {}
-  }, [form, request, token])
-
-  useEffect(() => {
-    if (files === 'gallery') {
-      pathToDB()
-      setSuccessForm((prev) => (prev = 'Галерея обновлена'))
-      setFiles('')
-    }
-    if (files === 'pdf') {
-      pathToDB()
-      setSuccessForm((prev) => (prev = 'PDF-файлы обновлены'))
-      setFiles('')
-    }
-  }, [files, pathToDB])
 
   // Обработка всплывающих окон
   useEffect(() => {
@@ -244,20 +188,10 @@ export const ProgramPage = () => {
             Authorization: `Bearer ${token}`,
           }
         )
-        const fetched = await request(`/api/program/${_id}`, 'GET', null, {
-          Authorization: `Bearer ${token}`,
-        })
-        setForm((prev) => {
-          return {
-            ...fetched,
-            sections: fetched.sections.length
-              ? fetched.sections
-              : [{ sectionTheme: '', sectionName: '', sectionBody: '' }],
-          }
-        })
+        await getData()
       } catch (e) {}
     },
-    [token, request, _id]
+    [token, request, _id, getData]
   )
 
   // Изменение состояния в зависимости от изменения полей списка
@@ -299,7 +233,6 @@ export const ProgramPage = () => {
             value={form.volume}
           />
         </Jumbotron>
-
         {form._id ? (
           <div className="row">
             <div className="col-sm-6">
@@ -379,9 +312,8 @@ export const ProgramPage = () => {
             ))
           : ''}
         <SubmitButton
-          _id={_id}
-          createHandler={createHandler}
-          updateHandler={updateHandler}
+          text={_id ? 'Обновить' : 'Создать'}
+          onClick={() => actionHandler(_id ? 'update' : 'create')}
           loading={loading}
         />
       </form>

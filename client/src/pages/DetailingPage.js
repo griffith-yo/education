@@ -5,7 +5,6 @@ import { AuthContext } from '../context/AuthContext'
 import { Loader } from '../components/Loader'
 import { useMessage } from '../hooks/message.hook'
 import DetailingList from '../components/DetailingList'
-import Page from '../components/Page'
 import WordSaveButton from '../components/WordSaveButton'
 import { detailingTemplate } from '../components/WordTemplates/detailing.template'
 

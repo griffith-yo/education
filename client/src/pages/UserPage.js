@@ -55,8 +55,8 @@ export const UserPage = () => {
     async (action) => {
       try {
         await request(
-          `/api/${action}/user`,
-          'POST',
+          '/api/user',
+          action,
           { ...form },
           {
             Authorization: `Bearer ${token}`,
@@ -265,7 +265,7 @@ export const UserPage = () => {
         </div>
         <SubmitButton
           text={_id ? 'Обновить' : 'Создать'}
-          onClick={() => actionHandler(_id ? 'update' : 'create')}
+          onClick={() => actionHandler(_id ? 'PUT' : 'POST')}
           loading={loading}
         />
       </form>

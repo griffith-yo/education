@@ -5,7 +5,7 @@ import React, {
   useState,
   useMemo,
 } from 'react'
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { useHttp } from '../hooks/http.hook'
 import { useMessage } from '../hooks/message.hook'
 import { AuthContext } from '../context/AuthContext'
@@ -40,6 +40,7 @@ export const ProgramPage = () => {
   })
   const [edudir, setEdudir] = useState([])
   const fileData = useMemo(() => new FormData(), [])
+  const history = useHistory()
 
   const getEdudir = useCallback(async () => {
     try {
@@ -75,17 +76,18 @@ export const ProgramPage = () => {
   const actionHandler = useCallback(
     async (action) => {
       try {
-        await request(
-          `/api/${action}/program`,
-          'POST',
+        const response = await request(
+          '/api/program',
+          action,
           { ...form },
           {
             Authorization: `Bearer ${token}`,
           }
         )
+        if (action === 'POST') history.push(`/program/${response}`)
       } catch (e) {}
     },
-    [form, request, token]
+    [form, request, token, history]
   )
 
   const fileHandler = useCallback(
@@ -313,7 +315,7 @@ export const ProgramPage = () => {
           : ''}
         <SubmitButton
           text={_id ? 'Обновить' : 'Создать'}
-          onClick={() => actionHandler(_id ? 'update' : 'create')}
+          onClick={() => actionHandler(_id ? 'PUT' : 'POST')}
           loading={loading}
         />
       </form>

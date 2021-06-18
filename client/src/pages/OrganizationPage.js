@@ -66,8 +66,8 @@ export const OrganizationPage = () => {
     async (action) => {
       try {
         await request(
-          `/api/${action}/organization`,
-          'POST',
+          '/api/organization',
+          action,
           { ...form },
           {
             Authorization: `Bearer ${token}`,
@@ -168,7 +168,7 @@ export const OrganizationPage = () => {
         </div>
         <SubmitButton
           text={_id ? 'Обновить' : 'Создать'}
-          onClick={() => actionHandler(_id ? 'update' : 'create')}
+          onClick={() => actionHandler(_id ? 'PUT' : 'POST')}
           loading={loading}
         />
       </form>

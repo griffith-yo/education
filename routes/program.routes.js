@@ -1,9 +1,8 @@
 const { Router } = require('express')
-const Program = require('../models/Program')
-const auth = require('../middleware/auth.middleware')
-const config = require('config')
-const Edudirection = require('../models/Edudirection')
 const router = Router()
+const Program = require('../models/Program')
+const Edudirection = require('../models/Edudirection')
+const auth = require('../middleware/auth.middleware')
 
 router.get('/', auth, async (req, res) => {
   try {
@@ -144,6 +143,103 @@ router.get('/search/:value', auth, async (req, res) => {
         })
       )
     )
+  } catch (e) {
+    res.status(500).json({ message: `Ошибка при запросе к базу данных: ${e}` })
+  }
+})
+
+router.post('/', auth, async (req, res) => {
+  try {
+    // То, что приходит в фронтенд (Получаем из body эти значения)
+    const { edudirection, name, volume, gallery, pdf } = req.body
+
+    // Поиск программы по названию
+    const candidate = await Program.findOne({ name })
+
+    // Если такая программа есть, то прекращаем выполнение скрипта RETURN и выводим сообщение
+    if (candidate) {
+      return res.status(400).json({
+        message: 'Программа обучения с таким названием уже существует',
+      })
+    }
+
+    const edudir = edudirection.__isNew__
+      ? new Edudirection({
+          name: edudirection.value,
+        })
+      : edudirection.value
+
+    // Создаем пользователя
+    const program = new Program({
+      edudirection: edudirection.__isNew__ ? edudir._id : edudir,
+      name,
+      volume,
+      gallery,
+      pdf,
+    })
+
+    // Сохраняем в БД
+    await program.save()
+
+    if (edudirection.__isNew__) {
+      edudir.programs.push(program._id)
+      await edudir.save()
+    } else {
+      const existedEdudir = await Edudirection.findById(edudir)
+      existedEdudir.programs = [...existedEdudir.programs, program._id]
+      await existedEdudir.save()
+    }
+
+    res.status(201).json(program._id)
+  } catch (e) {
+    res.status(500).json({ message: `Ошибка при запросе к базу данных: ${e}` })
+  }
+})
+
+router.put('/', auth, async (req, res) => {
+  try {
+    const { _id, edudirection, name, volume, gallery, pdf, sections } = req.body
+
+    const edudir = edudirection.__isNew__
+      ? new Edudirection({
+          name: edudirection.value,
+        })
+      : edudirection.value
+
+    // Находим программу для идентификации предыдущего направления обучения
+    const program = await Program.findById(_id)
+
+    // Убираем из предыдущего направления индентификатор программы обучения
+    const prevEdudir = await Edudirection.findById(program.edudirection)
+    if (prevEdudir) {
+      prevEdudir.programs = prevEdudir.programs.filter(
+        (programId) => programId.toString() !== program._id.toString()
+      )
+      await prevEdudir.save()
+    }
+
+    // Обновляем программу
+    await Program.findByIdAndUpdate(_id, {
+      edudirection: edudirection.__isNew__ ? edudir._id : edudir,
+      name,
+      volume,
+      gallery,
+      pdf,
+      sections,
+    })
+
+    if (edudirection.__isNew__) {
+      edudir.programs.push(program._id)
+      await edudir.save()
+    } else {
+      const existedEdudir = await Edudirection.findById(edudir)
+      if (!existedEdudir.programs.includes(program._id)) {
+        existedEdudir.programs.push(program._id)
+        await existedEdudir.save()
+      }
+    }
+
+    res.status(202).json({ message: 'Программа обучения обновлена' })
   } catch (e) {
     res.status(500).json({ message: `Ошибка при запросе к базу данных: ${e}` })
   }

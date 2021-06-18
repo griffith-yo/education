@@ -5,25 +5,19 @@ const Group = require('../models/Group')
 const Edudirection = require('../models/Edudirection')
 const Result = require('../models/Result')
 
-const mapSelectedUsers = async (users) =>
-  await Promise.all(
+const mapSelectedUsers = async (users) => {
+  const selectedUsers = await Promise.all(
     users.map(async (user) => {
-      const userFind = await User.findById(
-        user,
-        '_id lastname firstname patronymic'
-      )
-      return {
-        value: userFind ? userFind._id : 'Пользователь удален',
-        label: userFind
-          ? userFind.lastname +
-            ' ' +
-            userFind.firstname +
-            ' ' +
-            userFind.patronymic
-          : 'Пользователь удален',
-      }
+      const userFind = await User.findById(user, '_id fullname')
+      if (userFind)
+        return {
+          value: userFind._id,
+          label: userFind.fullname,
+        }
     })
   )
+  return selectedUsers.filter(Boolean)
+}
 
 const mapSelectedUsersWithResult = async (users, programs, group) => {
   const result = []
@@ -54,7 +48,7 @@ const mapSelectedUsersWithResult = async (users, programs, group) => {
             return result.push({
               userId: '',
               name: 'Пользователь удален',
-              programId: '',
+              programId: programToFind._id,
               program: programToFind.name,
               passed: '',
               attempt: '',
@@ -66,19 +60,21 @@ const mapSelectedUsersWithResult = async (users, programs, group) => {
   return result
 }
 
-const mapSelectedPrograms = async (programs) =>
-  await Promise.all(
+const mapSelectedPrograms = async (programs) => {
+  const selectedPrograms = await Promise.all(
     programs.map(async (program) => {
       const programFind = await Program.findById(program, '_id name')
       return {
-        value: programFind ? programFind._id : 'Программа удалена',
-        label: programFind ? programFind.name : 'Программа удалена',
+        value: programFind._id,
+        label: programFind.name,
       }
     })
   )
+  return selectedPrograms.filter(Boolean)
+}
 
-const mapSelectedProgramsAndEdudir = async (programs) =>
-  await Promise.all(
+const mapSelectedProgramsAndEdudir = async (programs) => {
+  const selectedProgramsAndEdudir = await Promise.all(
     programs.map(async (program) => {
       const programFind = await Program.findById(
         program,
@@ -89,58 +85,59 @@ const mapSelectedProgramsAndEdudir = async (programs) =>
         '_id name'
       )
       return {
-        value: programFind ? programFind._id : 'Программа удалена',
-        label: programFind ? programFind.name : 'Программа удалена',
-        valueEdudirection: edudirectionFind
-          ? edudirectionFind._id
-          : 'Направление обучения удалено',
-        labelEdudirection: edudirectionFind
-          ? edudirectionFind.name
-          : 'Направление обучения удалено',
+        value: programFind._id,
+        label: programFind.name,
+        valueEdudirection: edudirectionFind._id,
+        labelEdudirection: edudirectionFind,
       }
     })
   )
+  return selectedProgramsAndEdudir.filter(Boolean)
+}
 
-const mapSelectedOrganizations = async (organizations) =>
-  await Promise.all(
+const mapSelectedOrganizations = async (organizations) => {
+  const selectedOrganizations = await Promise.all(
     organizations.map(async (organization) => {
       const organizationFind = await Organization.findById(
         organization,
         '_id name'
       )
       return {
-        value: organizationFind ? organizationFind._id : 'Организация удалена',
-        label: organizationFind ? organizationFind.name : 'Организация удалена',
+        value: organizationFind._id,
+        label: organizationFind.name,
       }
     })
   )
+  return selectedOrganizations.filter(Boolean)
+}
 
-const mapSelectedGroups = async (groups) =>
-  await Promise.all(
+const mapSelectedGroups = async (groups) => {
+  const selectedGroups = await Promise.all(
     groups.map(async (group) => {
       const groupFind = await Group.findById(group, '_id name')
-      return {
-        value: groupFind ? groupFind._id : 'Группа удалена',
-        label: groupFind ? groupFind.name : 'Группа удалена',
-      }
+      if (groupFind)
+        return {
+          value: groupFind._id,
+          label: groupFind.name,
+        }
     })
   )
+  return selectedGroups.filter(Boolean)
+}
 
 const mapUsers = (users) =>
   users.reverse().map((user) => {
     return {
-      value: user._id || 'Пользователь удален',
-      label:
-        user.lastname + ' ' + user.firstname + ' ' + user.patronymic ||
-        'Пользователь удален',
+      value: user._id,
+      label: user.fullname,
     }
   })
 
 const mapPrograms = (programs) =>
   programs.reverse().map((program) => {
     return {
-      value: program._id || 'Программа удалена',
-      label: program.name || 'Программа удалена',
+      value: program._id,
+      label: program.name,
     }
   })
 

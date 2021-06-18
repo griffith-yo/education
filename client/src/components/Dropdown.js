@@ -18,19 +18,28 @@ const Dropdown = ({ text, group, items }) => {
       <ul className="dropdown-menu">
         {items.map((item, index) => (
           <li key={item.userId ? item.userId : index}>
-            <Link
-              className="dropdown-item"
-              to={`/result/${group}/${item.programId}/${item.userId}/${item.attempt}`}
-            >
-              {!item.attempt ? (
-                <HelpCircle className="text-warning" size={ICON_SIZE} />
-              ) : item.passed ? (
+            {!item.attempt ? (
+              <span className="dropdown-item">
+                <HelpCircle className="text-warning" size={ICON_SIZE} /> &nbsp;
+                {item.name}
+              </span>
+            ) : item.passed ? (
+              <Link
+                className="dropdown-item"
+                to={`/result/${group}/${item.programId}/${item.userId}/${item.attempt}`}
+              >
                 <Check className="text-success" size={ICON_SIZE} />
-              ) : (
+                &nbsp;{item.name}
+              </Link>
+            ) : (
+              <Link
+                className="dropdown-item"
+                to={`/result/${group}/${item.programId}/${item.userId}/${item.attempt}`}
+              >
                 <X className="text-danger" size={ICON_SIZE} />
-              )}
-              &nbsp;{item.name}
-            </Link>
+                &nbsp;{item.name}
+              </Link>
+            )}
           </li>
         ))}
       </ul>

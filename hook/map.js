@@ -41,14 +41,24 @@ const mapSelectedUsersWithResult = async (users, programs, group) => {
 
           const programToFind = await Program.findById(program, '_id name')
 
-          return result.push({
-            userId: userToFind._id,
-            name: userToFind.fullname,
-            programId: programToFind._id,
-            program: programToFind.name,
-            passed: resultToFind.passed,
-            attempt: resultToFind.attempt,
-          })
+          if (userToFind)
+            return result.push({
+              userId: userToFind._id,
+              name: userToFind.fullname,
+              programId: programToFind._id,
+              program: programToFind.name,
+              passed: resultToFind.passed,
+              attempt: resultToFind.attempt,
+            })
+          else
+            return result.push({
+              userId: '',
+              name: 'Пользователь удален',
+              programId: '',
+              program: programToFind.name,
+              passed: '',
+              attempt: '',
+            })
         })
       )
     })
@@ -119,16 +129,18 @@ const mapSelectedGroups = async (groups) =>
 const mapUsers = (users) =>
   users.reverse().map((user) => {
     return {
-      value: user._id,
-      label: user.lastname + ' ' + user.firstname + ' ' + user.patronymic,
+      value: user._id || 'Пользователь удален',
+      label:
+        user.lastname + ' ' + user.firstname + ' ' + user.patronymic ||
+        'Пользователь удален',
     }
   })
 
 const mapPrograms = (programs) =>
   programs.reverse().map((program) => {
     return {
-      value: program._id,
-      label: program.name,
+      value: program._id || 'Программа удалена',
+      label: program.name || 'Программа удалена',
     }
   })
 

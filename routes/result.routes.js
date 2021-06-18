@@ -19,7 +19,7 @@ router.get('/', auth, async (req, res) => {
         const group = await Group.findById(result.group, '_id name')
         const program = await Program.findById(result.program, '_id name')
 
-        if (result.attempt)
+        if (result.attempt && group && user)
           return {
             _id: result._id,
             userID: result.user,

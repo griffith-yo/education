@@ -1,4 +1,10 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react'
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+  useMemo,
+} from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 import { useHttp } from '../hooks/http.hook'
 import { useMessage } from '../hooks/message.hook'
@@ -32,11 +38,10 @@ export const ProgramPage = () => {
     pdf: [],
     sections: [{ _id: '', sectionTheme: '', sectionName: '', sectionBody: '' }],
   })
-
+  const fileData = useMemo(() => new FormData(), [])
   const [edudir, setEdudir] = useState([])
   // Состояние - флаг с названием загруженных файлов
   const [files, setFiles] = useState('')
-  const [deleted, setDeleted] = useState([])
   let history = useHistory()
 
   const getEdudir = useCallback(async () => {
@@ -102,8 +107,6 @@ export const ProgramPage = () => {
   const fileHandler = useCallback(
     async (event) => {
       try {
-        // Сначала записываем массив файлов в Formdata
-        const fileData = new FormData()
         let arr = []
         for (let i = 0; i < event.target.files.length; i++) {
           fileData.append(event.target.name, event.target.files[i])
@@ -134,7 +137,7 @@ export const ProgramPage = () => {
         setFiles(event.target.name)
       } catch (e) {}
     },
-    [form, request, token]
+    [form, request, token, fileData]
   )
 
   // Запрос на запись со списком файлов в поле БД
@@ -190,7 +193,7 @@ export const ProgramPage = () => {
     if (_id) {
       getData()
     }
-  }, [_id, deleted, getData, getEdudir])
+  }, [_id, getData, getEdudir])
 
   const changeHandler = (event) => {
     setForm((prev) => {
@@ -233,15 +236,25 @@ export const ProgramPage = () => {
   const deleteGalleryHandler = useCallback(
     async (filename, window) => {
       try {
-        const del = await request(
+        await request(
           `/api/delete/program/${window}/${_id}/${filename}`,
-          'GET',
+          'DELETE',
           null,
           {
             Authorization: `Bearer ${token}`,
           }
         )
-        setDeleted(del)
+        const fetched = await request(`/api/program/${_id}`, 'GET', null, {
+          Authorization: `Bearer ${token}`,
+        })
+        setForm((prev) => {
+          return {
+            ...fetched,
+            sections: fetched.sections.length
+              ? fetched.sections
+              : [{ sectionTheme: '', sectionName: '', sectionBody: '' }],
+          }
+        })
       } catch (e) {}
     },
     [token, request, _id]
@@ -353,7 +366,7 @@ export const ProgramPage = () => {
         {form._id
           ? form.sections.map((section, index) => (
               <Section
-                key={section.name ? section._id : form._id + '-' + index}
+                key={section.sectionBody}
                 sectionTheme={section.sectionTheme}
                 sectionName={section.sectionName}
                 sectionBody={section.sectionBody}

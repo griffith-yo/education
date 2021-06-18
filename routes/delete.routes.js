@@ -8,7 +8,7 @@ const fs = require('fs')
 const config = require('config')
 const router = Router()
 
-router.get('/user/:_id', auth, async (req, res) => {
+router.delete('/user/:_id', auth, async (req, res) => {
   try {
     await User.deleteOne({ _id: req.params._id })
     res.status(200).json({ message: 'Пользователь удален' })
@@ -17,7 +17,7 @@ router.get('/user/:_id', auth, async (req, res) => {
   }
 })
 
-router.get('/organization/:_id', auth, async (req, res) => {
+router.delete('/organization/:_id', auth, async (req, res) => {
   try {
     await Organization.deleteOne({ _id: req.params._id })
     res.status(200).json({ message: 'Организация удалена' })
@@ -26,7 +26,7 @@ router.get('/organization/:_id', auth, async (req, res) => {
   }
 })
 
-router.get('/group/:_id', auth, async (req, res) => {
+router.delete('/group/:_id', auth, async (req, res) => {
   try {
     await Group.deleteOne({ _id: req.params._id })
     res.status(200).json({ message: 'Группа удалена' })
@@ -35,7 +35,7 @@ router.get('/group/:_id', auth, async (req, res) => {
   }
 })
 
-router.get('/program/:_id', auth, async (req, res) => {
+router.delete('/program/:_id', auth, async (req, res) => {
   try {
     const programId = req.params._id
     const program = await Program.findById(programId)
@@ -56,7 +56,7 @@ router.get('/program/:_id', auth, async (req, res) => {
   }
 })
 
-router.get('/program/gallery/:_id/:filename', auth, async (req, res) => {
+router.delete('/program/gallery/:_id/:filename', auth, async (req, res) => {
   try {
     // Массив для временного хранения галереи без удаленного объекта
     const program = await Program.findById({ _id: req.params._id })
@@ -75,7 +75,7 @@ router.get('/program/gallery/:_id/:filename', auth, async (req, res) => {
   }
 })
 
-router.get('/program/pdf/:_id/:filename', auth, async (req, res) => {
+router.delete('/program/pdf/:_id/:filename', auth, async (req, res) => {
   try {
     // Массив для временного хранения галереи без удаленного объекта
     const program = await Program.findById({ _id: req.params._id })

@@ -15,10 +15,12 @@ import { Plus } from 'react-feather'
 import { Pagination } from './Pagination'
 import { usePagination } from '../hooks/pagination.hook'
 
+const DATA_LIMIT = 10
+const PAGE_LIMIT = 3
+
 const SidebarPageBody = ({ header, target, dashboardInfo, children }) => {
   const showToast = useMessage()
   const [data, setData] = useState([])
-  const [deleted, setDeleted] = useState([])
   const { loading, request, error, clearError, success, clearSuccess } =
     useHttp()
   const { token } = useContext(AuthContext)
@@ -40,9 +42,6 @@ const SidebarPageBody = ({ header, target, dashboardInfo, children }) => {
     }
   }, [error, info, success, clearError, clearSuccess, showToast])
 
-  const dataLimit = 10
-  const pageLimit = 3
-
   const {
     pages,
     currentPage,
@@ -53,8 +52,8 @@ const SidebarPageBody = ({ header, target, dashboardInfo, children }) => {
     getPaginationGroup,
   } = usePagination({
     data,
-    pageLimit,
-    dataLimit,
+    PAGE_LIMIT,
+    DATA_LIMIT,
   })
 
   const fetch = useCallback(async () => {
@@ -69,10 +68,13 @@ const SidebarPageBody = ({ header, target, dashboardInfo, children }) => {
   const deleteHandler = useCallback(
     async (_id) => {
       try {
-        const del = await request(`/api/delete/${target}/${_id}`, 'GET', null, {
+        await request(`/api/delete/${target}/${_id}`, 'DELETE', null, {
           Authorization: `Bearer ${token}`,
         })
-        setDeleted((prev) => del)
+        const fetched = await request(`/api/${target}`, 'GET', null, {
+          Authorization: `Bearer ${token}`,
+        })
+        setData((prev) => fetched)
       } catch (e) {}
     },
     [token, request, target]
@@ -147,10 +149,10 @@ const SidebarPageBody = ({ header, target, dashboardInfo, children }) => {
     if (dashboardInfo) dashboardInfo(data)
   }, [data, dashboardInfo])
 
-  // Хук эффекта запускается при входе на страницу и изменении состояния deleted
+  // Хук эффекта запускается при входе на страницу
   useEffect(() => {
     fetch()
-  }, [fetch, deleted])
+  }, [fetch])
 
   return (
     <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4">

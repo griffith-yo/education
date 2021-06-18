@@ -77,15 +77,15 @@ export const AuthPage = () => {
         login={true}
       />
       <br />
-      <button
+      {/* <button
         className="w-100 btn btn-lg btn-secondary"
         type="submit"
         onClick={registerHandler}
         disabled={loading}
       >
         Регистрация
-      </button>
-      <p className="mt-5 mb-3 text-muted">
+      </button> */}
+      <p className="mb-3 text-muted">
         &copy; EntryPoint 2020 – {date.getFullYear()}
       </p>
       <ToastComponent />

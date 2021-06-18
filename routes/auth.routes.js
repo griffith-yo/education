@@ -2,12 +2,10 @@ const { Router } = require('express')
 const bcrypt = require('bcryptjs')
 const config = require('config')
 const jwt = require('jsonwebtoken')
-const { check, validationResult } = require('express-validator')
+const { check, validationResult, body } = require('express-validator')
 const User = require('../models/User')
 const router = Router()
 
-// Обработка POST запроса
-// /api/auth/register
 router.post(
   '/register',
   [
@@ -26,24 +24,21 @@ router.post(
         })
       }
 
-      // То, что приходит в фронтенд (Получаем из body эти значения)
       const { login, password } = req.body
 
       // Поиск человека по email
       const candidate = await User.findOne({ login })
 
-      // Если такой пользователь есть, то прекращаем выполнение скрипта RETURN и выводим сообщение
       if (candidate) {
         return res
           .status(400)
           .json({ message: 'Такой пользователь уже существует' })
       }
 
-      // Ждем шифрования пароля
-      const hashedPassword = await bcrypt.hash(password, 12)
-      // Создаем пользователя
+      const hashedPassword = bcrypt.hashSync(password, 12)
+
       const user = new User({ login, password: hashedPassword })
-      // Сохраняем в БД
+
       await user.save()
 
       res.status(201).json({ message: 'Пользователь создан' })
@@ -55,14 +50,9 @@ router.post(
   }
 )
 
-// Обработка POST запроса
-// /api/auth/login
 router.post(
   '/login',
-  [
-    check('login', 'Введите логин').exists(),
-    check('password', 'Введите пароль').exists(),
-  ],
+  [body('login').exists('checkFalsy'), body('password').exists('checkFalsy')],
   async (req, res) => {
     try {
       const errors = validationResult(req)
@@ -82,7 +72,7 @@ router.post(
         return res.status(400).json({ message: 'Пользователь не найден' })
       }
 
-      const isMatch = bcrypt.compare(password, user.password)
+      const isMatch = bcrypt.compareSync(password, user.password)
 
       if (!isMatch) {
         return res
@@ -90,18 +80,14 @@ router.post(
           .json({ message: 'Неверный пароль, попробуйте снова' })
       }
 
-      // Вычисляем время от текущего состояния до конца дня и делаем валидным токен до конца дня (значение в ms, т.е. часы = ms/1000/60/60)
-      const start = new Date()
-      const end = new Date()
-      end.setHours(23, 59, 59, 999)
-      const expiresIn = end - start
+      // Вычисляем время от текущего состояния до конца дня и делаем валидным токен до конца дня
+      const startHours = new Date().getHours()
+      const expiresHours = 24 - startHours
 
-      // Формирование токена (1 - объект, который записывает значения в токен, 2 - секретная строка, 3 - время жизни токена)
       const token = jwt.sign({ userId: user.id }, config.get('jwtSecret'), {
-        expiresIn: expiresIn,
+        expiresIn: `${expiresHours}h`,
       })
 
-      // Отвечаем по умолчанию со статусом 200
       res.json({
         token,
         userId: user.id,

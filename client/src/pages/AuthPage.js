@@ -26,11 +26,11 @@ export const AuthPage = () => {
     setForm({ ...form, [event.target.name]: event.target.value })
   }
 
-  // const registerHandler = async () => {
-  //   try {
-  //     await request('/api/auth/register', 'POST', { ...form })
-  //   } catch (e) {}
-  // }
+  const registerHandler = async () => {
+    try {
+      await request('/api/auth/register', 'POST', { ...form })
+    } catch (e) {}
+  }
 
   const actionHandler = async () => {
     try {
@@ -73,15 +73,14 @@ export const AuthPage = () => {
         width={'w-100'}
         loading={loading}
       />
-      <br />
-      {/* <button
-        className="w-100 btn btn-lg btn-secondary"
+      <button
+        className="w-100 btn btn-lg btn-secondary mb-3"
         type="submit"
         onClick={registerHandler}
         disabled={loading}
       >
         Регистрация
-      </button> */}
+      </button>
       <p className="mb-3 text-muted">
         &copy; EntryPoint 2020 – {new Date().getFullYear()}
       </p>

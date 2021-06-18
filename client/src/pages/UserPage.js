@@ -41,12 +41,7 @@ export const UserPage = () => {
       const fetched = await request(`/api/user/${_id}`, 'GET', null, {
         Authorization: `Bearer ${token}`,
       })
-      setForm((prev) => {
-        return {
-          ...fetched,
-          password2: fetched.password,
-        }
-      })
+      setForm((prev) => fetched)
     } catch (e) {}
   }, [_id, request, token])
 

@@ -162,7 +162,7 @@ router.put(
       if (!errors.isEmpty()) {
         return res.status(400).json({
           errors: errors.array(),
-          message: 'Некорректная длина пароля или e-mail',
+          message: 'Некорректная длина пароля или неверно введен e-mail',
         })
       }
 
@@ -181,19 +181,16 @@ router.put(
         avatar,
       } = req.body
 
-      if (password !== password2) {
+      if (!password2 || (password2 && password !== password2)) {
         return res.status(400).json({
           message: 'Введеные пароли не совпадают',
         })
       }
 
-      // Ждем шифрования пароля
-      const hashedPassword = await bcrypt.hash(password, 12)
-
       await User.findByIdAndUpdate(_id, {
         login,
         email,
-        password: hashedPassword,
+        password: password2 ? await bcrypt.hash(password, 12) : password,
         firstname,
         lastname,
         patronymic,

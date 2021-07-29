@@ -4,7 +4,7 @@ import { AuthContext } from '../context/AuthContext'
 import { useMessage } from '../hooks/message.hook'
 import ToastComponent from '../components/Toast'
 import SubmitButton from '../components/SubmitButton'
-import logo from '../img/small-logo-ep.png'
+import logo from '../img/logo.jpg'
 
 export const AuthPage = () => {
   const auth = useContext(AuthContext)

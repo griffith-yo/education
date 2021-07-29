@@ -31,10 +31,8 @@ router.get('/', auth, async (req, res) => {
               group.programs,
               group._id
             ),
-            dateStart:
-              group.dateStart.toLocaleDateString() || 'Дата не была введена',
-            dateEnd:
-              group.dateEnd.toLocaleDateString() || 'Дата не была введена',
+            dateStart: group.dateStart?.toLocaleDateString(),
+            dateEnd: group.dateEnd?.toLocaleDateString(),
             selectedUsers: await mapSelectedUsers(group.users),
             selectedTeachers: await mapSelectedUsers(group.teachers),
             selectedPrograms: await mapSelectedProgramsAndEdudir(

@@ -41,7 +41,7 @@ export const AuthPage = () => {
 
   return (
     <main className="form-signin">
-      <img className="mb-4" src={logo} alt="" />
+      <img className="mb-4 w-100" src={logo} alt="" />
       <h1 className="h3 mb-3 fw-normal">Авторизация</h1>
       <div className="form-floating">
         <input

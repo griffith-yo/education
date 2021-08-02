@@ -99,6 +99,9 @@ const ModalComponent = ({
           <Document
             file={`/program/pdf/${pdf.filename}`}
             onLoadSuccess={onDocumentLoadSuccess}
+            onLoadError={(error) =>
+              console.log('Error while loading document! ' + error.message)
+            }
           >
             <Page height={1000} pageNumber={pageNumber} />
           </Document>

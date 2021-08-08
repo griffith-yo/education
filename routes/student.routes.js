@@ -109,7 +109,7 @@ router.post('/submit', auth, async (req, res) => {
     let scores = 0
     let passed = false
     const scoresMax = program.questions.length
-    const passingScore = Math.ceil(scoresMax / 2)
+    const passingScore = Math.ceil(scoresMax * 0.8)
 
     // Вычисляем расхождения массивов. Если массив изначальный и результирующий сопадают, то добавляем балл
     const questions = resultQuestions.map((question, qIndex) => {
